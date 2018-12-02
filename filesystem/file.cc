@@ -1,7 +1,7 @@
 // Copyright 2011 Olivier Gillet.
 //
 // Author: Olivier Gillet (ol.gillet@gmail.com)
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -17,11 +17,11 @@
 //
 // FatFS wrappers.
 
-#include "avrlibx/filesystem/file.h"
+#include <avrlibx/filesystem/file.h>
 
 namespace avrlibx {
 
-File::File() 
+File::File()
   : opened_(0) {
 
 }
@@ -52,7 +52,7 @@ FilesystemStatus File::Open(
   if (opened_) {
     Close();
   }
-  
+
   FilesystemStatus s;
   s = static_cast<FilesystemStatus>(f_open(&f_, file_name, attributes));
   if (s == FS_DISK_ERROR && retry_timeout) {
@@ -74,7 +74,7 @@ FilesystemStatus File::Seek(uint32_t position) {
   if (!opened_) {
     return FS_NOT_OPENED;
   }
-  
+
   return static_cast<FilesystemStatus>(f_lseek(&f_, position));
 }
 
@@ -86,7 +86,7 @@ FilesystemStatus File::Truncate() {
   if (!opened_) {
     return FS_NOT_OPENED;
   }
-  
+
   return static_cast<FilesystemStatus>(f_truncate(&f_));
 }
 
@@ -94,7 +94,7 @@ FilesystemStatus File::Sync() {
   if (!opened_) {
     return FS_NOT_OPENED;
   }
-  
+
   return static_cast<FilesystemStatus>(f_sync(&f_));
 }
 
@@ -102,7 +102,7 @@ FilesystemStatus File::Read(uint8_t* data, uint16_t size, uint16_t* read) {
   if (!opened_) {
     return FS_NOT_OPENED;
   }
-  
+
   return static_cast<FilesystemStatus>(f_read(&f_, data, size, read));
 }
 

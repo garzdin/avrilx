@@ -21,7 +21,7 @@
 #ifndef AVRLIBX_IO_RING_BUFFER_H_
 #define AVRLIBX_IO_RING_BUFFER_H_
 
-#include "avrlibx/avrlibx.h"
+#include <avrlibx/avrlibx.h>
 
 namespace avrlibx {
 

@@ -22,9 +22,9 @@
 
 #include <avr/delay.h>
 
-#include "avrlibx/avrlibx.h"
-#include "avrlibx/io/gpio.h"
-#include "avrlibx/system/event_system.h"
+#include <avrlibx/avrlibx.h>
+#include <avrlibx/io/gpio.h>
+#include <avrlibx/system/event_system.h>
 
 namespace avrlibx {
 
@@ -61,7 +61,7 @@ enum TimerEventAction {
   TIMER_EVENT_ACTION_UPDOWN = TC_EVACT_UPDOWN_gc,
   TIMER_EVENT_ACTION_QDEC = TC_EVACT_QDEC_gc,
   TIMER_EVENT_ACTION_RESTART = TC_EVACT_RESTART_gc,
-  TIMER_EVENT_ACTION_FRQ = TC_EVACT_FRW_gc,
+  TIMER_EVENT_ACTION_FRQ = TC_EVACT_FRQ_gc,
   TIMER_EVENT_ACTION_PW = TC_EVACT_PW_gc
 };
 
@@ -141,85 +141,85 @@ class Timer {
     // Preserve Compare/capture enable and set mode.
     TC::tc().CTRLB = (TC::tc().CTRLB & 0xf0) | mode;
   }
-   
+
   static volatile inline uint16_t count() {
     return TC::count();
   }
   static inline void set_count(uint16_t value) {
     TC::set_count(value);
   }
-  
+
   static inline uint16_t period() {
     return TC::period();
   }
   static inline void set_period(uint16_t value) {
     TC::set_period(value);
   }
-  
+
   static inline void Restart() {
     TC::tc().CTRLFSET = 8;
   }
-  
+
   static inline void Bind(uint8_t channel, TimerEventAction event_action) {
     TC::tc().CTRLD = event_action | 0x08 | channel;
   }
-  
+
   static inline void EnableCC(uint8_t channel) {
     TC::tc().CTRLB |= (16 << channel);
   }
   static inline void StopCC(uint8_t channel) {
     TC::tc().CTRLB &= ~(16 << channel);
   }
-  
+
   static inline void set_pwm_resolution(uint8_t resolution) {
     TC::set_period((1 << static_cast<uint16_t>(resolution) )- 1);
   }
-  
+
   static inline void EnableOverflowInterrupt(uint8_t int_level) {
     TC::tc().INTCTRLA = (TC::tc().INTCTRLA & 0xfc) | int_level;
   }
-  
+
   static inline void DisableOverflowInterrupt() {
     TC::tc().INTCTRLA = TC::tc().INTCTRLA & 0xfc;
   }
-  
+
   static inline void EnableChannelInterrupt(
       uint8_t channel, uint8_t int_level) {
     uint8_t shift = channel << 2;
     uint8_t mask = (0x3) << shift;
     TC::tc().INTCTRLB = (TC::tc().INTCTRLB & ~mask) | (int_level << shift);
   }
-  
+
   static inline void DisableChannelInterrupt(uint8_t channel) {
     uint8_t shift = channel << 2;
     uint8_t mask = (0x3) << shift;
     TC::tc().INTCTRLB = TC::tc().INTCTRLB & ~mask;
   }
-  
+
   template<uint8_t channel>
   static inline void set_channel(uint16_t value) {
     TC::template set_channel<channel>(value);
   }
-  
+
   template<uint8_t channel>
   static inline uint16_t get_channel() {
     return TC::template get_channel<channel>();
   }
-  
+
   template<uint8_t channel>
   static inline void EnableChannelInterrupt(uint8_t int_level) {
     uint8_t shift = channel << 2;
     uint8_t mask = (0x3) << shift;
     TC::tc().INTCTRLB = (TC::tc().INTCTRLB & ~mask) | (int_level << shift);
   }
-  
+
   template<uint8_t channel>
   static inline void DisableChannelInterrupt() {
     uint8_t shift = channel << 2;
     uint8_t mask = (0x3) << shift;
     TC::tc().INTCTRLB = TC::tc().INTCTRLB & ~mask;
   }
-  
+
   static inline uint8_t dma_tx_trigger() {
     //
     // Horrible hack ahead!
@@ -246,7 +246,7 @@ class DualTimer {
   static inline void EnabledInterrupts(uint8_t level_1, uint8_t level_2) {
     TC::tc().INTCTRLA = (level_1 << 2) | level_2;
   }
-  
+
   static inline void set_periods(uint8_t period_1, uint8_t period_2) {
     TC::tc().HPER = period_1;
     TC::tc().LPER = period_2;

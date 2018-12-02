@@ -17,7 +17,7 @@
 //
 // Random number generator.
 
-#include "avrlibx/utils/random.h"
+#include <avrlibx/utils/random.h>
 
 namespace avrlibx {
 

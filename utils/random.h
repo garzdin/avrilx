@@ -20,7 +20,7 @@
 #ifndef AVRLIBX_UTILS_RANDOM_H_
 #define AVRLIBX_UTILS_RANDOM_H_
 
-#include "avrlibx/avrlibx.h"
+#include <avrlibx/avrlibx.h>
 
 namespace avrlibx {
 
@@ -46,7 +46,7 @@ class Random {
     Update();
     return state_msb();
   }
-  
+
   static inline uint16_t GetWord() {
     Update();
     return state();

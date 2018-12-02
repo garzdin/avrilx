@@ -35,7 +35,7 @@ template<bool b>
 inline void StaticAssertImplementation() {
 	char static_assert_size_mismatch[b] = { 0 };
 }
- 
+
 #define STATIC_ASSERT(expression) StaticAssertImplementation<(expression)>()
 
 typedef union {
@@ -101,7 +101,7 @@ class scoped_resource {
   scoped_resource() {
     T::Begin();
   }
-  
+
   ~scoped_resource() {
     T::End();
   }

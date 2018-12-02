@@ -1,7 +1,7 @@
 // Copyright 2011 Olivier Gillet.
 //
 // Author: Olivier Gillet (ol.gillet@gmail.com)
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -17,7 +17,7 @@
 //
 // FatFS wrappers.
 
-#include "avrlibx/filesystem/directory.h"
+#include <avrlibx/filesystem/directory.h>
 
 namespace avrlibx {
 

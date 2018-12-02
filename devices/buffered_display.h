@@ -26,10 +26,10 @@
 #ifndef AVRLIBX_DEVICES_BUFFERED_DISPLAY_H_
 #define AVRLIBX_DEVICES_BUFFERED_DISPLAY_H_
 
-#include "avrlibx/avrlibx.h"
-#include "avrlibx/system/time.h"
-#include "avrlibx/utils/log2.h"
-#include "avrlibx/utils/op.h"
+#include <avrlibx/avrlibx.h>
+#include <avrlibx/system/time.h>
+#include <avrlibx/utils/log2.h>
+#include <avrlibx/utils/op.h>
 
 namespace avrlibx {
 
@@ -58,7 +58,7 @@ class BufferedDisplay {
     cursor_position_ = 255;
     blink_ = 0;
   }
-  
+
   static char* line_buffer(uint8_t line) {
     return static_cast<char*>(
         static_cast<void*>(local_ + U8U8Mul(line, width)));
@@ -73,7 +73,7 @@ class BufferedDisplay {
       --row;
     }
   }
-  
+
   static void Clear() {
     memset(local_, ' ', lcd_buffer_size);
   }
@@ -86,7 +86,7 @@ class BufferedDisplay {
   static inline void set_cursor_character(uint8_t character) {
     cursor_character_ = character;
   }
-  
+
   static inline uint8_t cursor_position() {
     return cursor_position_;
   }
@@ -94,7 +94,7 @@ class BufferedDisplay {
   static inline void set_status(uint8_t status) {
     status_ = status + 1;
   }
-  
+
   static inline void ForceStatus(uint8_t status) {
     if (Lcd::writable() < 4) {
       return;
@@ -117,7 +117,7 @@ class BufferedDisplay {
     }
     // It is now safe to assume that all writes of 4 bytes to the display buffer
     // will not block.
-    
+
     if (previous_blink_counter_ > Lcd::blink_counter()) {
       ++blink_;
       status_ = 0;

@@ -17,7 +17,7 @@
 //
 // Interrupt handlers for TWI.
 
-#include "avrlibx/io/twi.h"
+#include <avrlibx/io/twi.h>
 
 #include <avr/interrupt.h>
 

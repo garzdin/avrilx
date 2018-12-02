@@ -22,7 +22,7 @@
 
 #include <avr/io.h>
 
-#include "avrlibx/avrlibx.h"
+#include <avrlibx/avrlibx.h>
 
 #define CCP_WRITE(x, y) CCP = CCP_IOREG_gc; x = y;
 

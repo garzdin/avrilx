@@ -23,9 +23,9 @@
 #ifndef AVRLIBX_RESOURCES_MANAGER_H_
 #define AVRLIBX_RESOURCES_MANAGER_H_
 
-#include "avrlibx/avrlibx.h"
+#include <avrlibx/avrlibx.h>
 
-#include <string.h>
+#include <avrlibx/string.h>
 #include <avr/pgmspace.h>
 
 namespace avrlibx {
@@ -86,7 +86,7 @@ class ResourcesManager {
   static void Load(const prog_char* p, uint8_t i, T* destination) {
     memcpy_P(destination, p + i * sizeof(T), sizeof(T));
   }
-  
+
   template<typename T, typename U>
   static void Load(const T* p, uint8_t i, U* destination) {
     STATIC_ASSERT(sizeof(T) == sizeof(U));

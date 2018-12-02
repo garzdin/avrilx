@@ -18,7 +18,7 @@
 
 #include <avr/io.h>
 
-#include "avrlibx/avrlibx.h"
+#include <avrlibx/avrlibx.h>
 
 namespace avrlibx {
 

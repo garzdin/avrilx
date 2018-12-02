@@ -7,8 +7,8 @@
 
 #ifdef _WIN32 /* FatFs development platform */
 
-#include <windows.h>
-#include <tchar.h>
+#include <avrlibx/windows.h>
+#include <avrlibx/tchar.h>
 
 #else     /* Embedded platform */
 

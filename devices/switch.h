@@ -22,17 +22,17 @@
 #ifndef AVRLIBX_DEVICES_SWITCHES_H_
 #define AVRLIBX_DEVICES_SWITCHES_H_
 
-#include "avrlibx/avrlibx.h"
-#include "avrlibx/devices/shift_register.h"
-#include "avrlibx/io/gpio.h"
+#include <avrlibx/avrlibx.h>
+#include <avrlibx/devices/shift_register.h>
+#include <avrlibx/io/gpio.h>
 
 namespace avrlibx {
-  
+
 template<typename Input, bool pulled_up = true>
 class DebouncedSwitch {
  public:
   DebouncedSwitch() { }
-    
+
   static inline void Init() {
     Input::set_direction(INPUT);
     if (pulled_up) {
@@ -78,7 +78,7 @@ class DebouncedSwitches {
     Register::Init();
     memset(state_, 0xff, sizeof(state_));
   }
-  
+
   static inline T ReadRegister() {
     return Register::Read();
   }
@@ -93,11 +93,11 @@ class DebouncedSwitches {
       mask >>= 1;
     }
   }
-  
+
   static inline void Read() {
     Process(ReadRegister());
   }
-  
+
   static inline uint8_t lowered(uint8_t index) { return state_[index] == 0x80; }
   static inline uint8_t raised(uint8_t index) { return state_[index] == 0x7f; }
   static inline uint8_t high(uint8_t index) { return state_[index] == 0xff; }

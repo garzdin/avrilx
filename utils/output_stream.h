@@ -22,7 +22,7 @@
 #ifndef AVRLIBX_UTILS_OUTPUT_STREAM_H_
 #define AVRLIBX_UTILS_OUTPUT_STREAM_H_
 
-#include "avrlibx/utils/string.h"
+#include <avrlibx/utils/string.h>
 
 using avrlibx::Itoa;
 using avrlibx::TypeInfo;

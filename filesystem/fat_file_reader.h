@@ -1,7 +1,7 @@
 // Copyright 2011 Olivier Gillet.
 //
 // Author: Olivier Gillet (ol.gillet@gmail.com)
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -30,9 +30,9 @@
 #ifndef AVRLIBX_FILESYSTEM_FAT_FILE_READER_H_
 #define AVRLIBX_FILESYSTEM_FAT_FILE_READER_H_
 
-#include <string.h>
+#include <avrlibx/string.h>
 
-#include "avrlibx/avrlibx.h"
+#include <avrlibx/avrlibx.h>
 
 namespace avrlibx {
 
@@ -59,7 +59,7 @@ struct BootSector {
   uint16_t bytes_per_sector;
   uint8_t sec_per_cluster;
   uint16_t reserved_sec_count;
-  
+
   uint8_t num_fats;
   uint16_t root_entry_count;
   uint16_t total_sec;
@@ -69,7 +69,7 @@ struct BootSector {
   uint16_t num_heads;
   uint32_t hidden_sec;
   uint32_t total_sector;
-  
+
   union {
     struct {
       uint16_t drive_number;
@@ -77,10 +77,10 @@ struct BootSector {
       uint32_t volume_id;
       char label[11];
       char fs_type[8];
-      
+
       uint8_t padding[28];
     } fat16;
-    
+
     struct {
       uint32_t fat_size;
       uint16_t flags;
@@ -89,7 +89,7 @@ struct BootSector {
       uint16_t info_sector;
       uint16_t backup_sector;
       uint8_t reserved[12];
-      
+
       uint16_t drive_number;
       uint8_t ext_signature;
       uint32_t volume_id;
@@ -97,7 +97,7 @@ struct BootSector {
       char fs_type[8];
     } fat32;
   };
-  
+
   uint8_t bootstrap_code[420];
   uint16_t signature;
 };
@@ -124,7 +124,7 @@ struct DirectoryEntry {
 	uint32_t last_write_time;
 	uint16_t first_cluster;
 	uint32_t file_size;
-	
+
   uint8_t is_volume() { return attribute & FILE_VOLUME; }
   uint8_t is_file() { return !(attribute & (FILE_VOLUME | FILE_DIRECTORY)); }
 };
@@ -162,24 +162,24 @@ enum HandleType {
 
 struct FsHandle {
   HandleType type;
-  
+
   // Position of the sector within the cluster. When this is equal to
   // sector_size_ (number of sectors per cluster), we should use the FAT to
   // follow the link to the next sector.
   uint8_t cluster_position;
-  
+
   // Position within file (byte) or directory list (entry#).
   uint16_t cursor;
-  
+
   // The cluster/sector to be read at the next Read/Next operation.
   uint32_t cluster;
   uint32_t sector;
-  
+
   // The cluster read during the most recent operation.
   uint32_t current_sector;
-  
+
   DirectoryEntry entry;
-  
+
   uint8_t eof() { return entry.file_size == 0; }
 };
 
@@ -187,7 +187,7 @@ template<typename Media, bool safe = false>
 class FATFileReader {
  public:
   FATFileReader() { }
-  
+
   // Init the media access layer and look for a FAT file system in the first
   // partition.
   static FatFileReaderStatus Init() {
@@ -209,7 +209,7 @@ class FATFileReader {
         return status;
       }
     }
-    
+
     // Read FS layout.
     uint32_t fat_size = sector_.boot.fat_size;
     if (fat_type_ == FFR_FAT32) {
@@ -225,13 +225,13 @@ class FATFileReader {
     fat_sector_ = boot_sector + sector_.boot.reserved_sec_count;
     cluster_size_ = sector_.boot.sec_per_cluster;
     uint32_t start = fat_sector_ + fat_size;
-    
+
     root_dir_ = fat_type_ == FFR_FAT32 ? sector_.boot.fat32.root_sector : start;
     data_sector_ = start + (sector_.boot.root_entry_count / 16);
-    
+
     return FFR_OK;
   }
-  
+
   // Open the root directory and start iterating on the file list.
   static FatFileReaderStatus OpenRootDir(FsHandle* handle) {
     memset(handle, 0, sizeof(FsHandle));
@@ -243,7 +243,7 @@ class FATFileReader {
     }
     return FFR_OK;
   }
-  
+
   // Iterate on the next file in the opened directory.
   static FatFileReaderStatus Next(FsHandle* handle) {
     if (safe && handle->type != FFR_DIR_HANDLE) {
@@ -279,7 +279,7 @@ class FATFileReader {
     }
     return FFR_ERROR_NO_MORE_FILES;
   };
-  
+
   // Open a file identified by a 83 name.
   static FatFileReaderStatus Open(const char* name83, FsHandle* handle) {
     OpenRootDir(handle);
@@ -290,11 +290,11 @@ class FATFileReader {
     }
     return FFR_ERROR_FILE_NOT_FOUND;
   }
-  
+
   // Open a file identified by a directory handle.
   static FatFileReaderStatus Open(FsHandle* handle) {
     if (safe && (handle->type != FFR_DIR_HANDLE ||
-        handle->entry.name[0] == 0 || 
+        handle->entry.name[0] == 0 ||
         handle->entry.name[0] == 0xe5 ||
         (!handle->entry.is_file()))) {
       return FFR_ERROR_BAD_FILE;
@@ -313,7 +313,7 @@ class FATFileReader {
     handle->cursor = 0;
     return FFR_OK;
   }
-  
+
   // Read data from a file.
   static uint16_t Read(FsHandle* handle, uint16_t size, uint8_t* buffer) {
     if (safe && handle->type != FFR_FILE_HANDLE) {
@@ -345,7 +345,7 @@ class FATFileReader {
       size -= readable;
       read += readable;
       remaining -= readable;
-      
+
       if (handle->cursor == 512) {
         handle->cursor = 0;
       }
@@ -353,7 +353,7 @@ class FATFileReader {
     handle->entry.file_size = remaining;
     return read;
   }
-  
+
  private:
   // Check if a cluster number is valid.
   static inline uint8_t is_valid_cluster(uint32_t cluster) {
@@ -363,7 +363,7 @@ class FATFileReader {
       return (cluster >= 2 && cluster <= 0x0fffffef);
     }
   }
-  
+
   // Follow the FAT linked list.
   static uint32_t NextCluster(uint32_t cluster) {
     if (cluster < 2) {
@@ -389,7 +389,7 @@ class FATFileReader {
     }
     return 0;
   }
-  
+
   // Shortcut for reading a sector into memory.
   static uint8_t ReadSector(uint32_t sector)  __attribute__((noinline)) {
     if (Media::ReadSectors(sector, 1, sector_.bytes)) {
@@ -401,7 +401,7 @@ class FATFileReader {
       return 0;
     }
   }
-  
+
   // Read the next sector for the current object (directory or file).
   // If the end of a cluster is reached, get the next cluster from the FAT.
   static FatFileReaderStatus ReadNextSector(FsHandle* handle) {
@@ -426,7 +426,7 @@ class FATFileReader {
     ++handle->cluster_position;
     return FFR_OK;
   }
-  
+
   // Convert a cluster index to a sector address.
   static uint32_t cluster_to_sector(uint32_t cluster) __attribute__((noinline)) {
     cluster -= 2;
@@ -438,16 +438,16 @@ class FATFileReader {
     }
     return cluster + data_sector_;
   }
-   
+
   // Look for a FAT FS at a given sector.
   static FatFileReaderStatus FindBootSector(uint32_t sector) {
     if (ReadSector(sector)) {
-      return FFR_ERROR_READ; 
+      return FFR_ERROR_READ;
     }
     if (sector_.boot.signature != 0xaa55) {
       return FFR_ERROR_DISK_FORMAT_ERROR;
     }
-    if (sector_.boot.fat16.fs_type[0] == 'F' && 
+    if (sector_.boot.fat16.fs_type[0] == 'F' &&
         sector_.boot.fat16.fs_type[1] == 'A') {
       fat_type_ = FFR_FAT16;
       return FFR_OK;
@@ -459,10 +459,10 @@ class FATFileReader {
     }
     return FFR_ERROR_NO_FAT;
   }
-  
+
   static uint32_t fetched_sector_;
   static Sector sector_;
-  
+
   static FatType fat_type_;
   static uint8_t cluster_size_;
 
@@ -470,7 +470,7 @@ class FATFileReader {
   static uint32_t root_dir_;
   static uint32_t fat_sector_;
   static uint32_t data_sector_;
-  
+
   DISALLOW_COPY_AND_ASSIGN(FATFileReader);
 };
 
@@ -501,7 +501,7 @@ struct DummyMediaInterface {
   static uint8_t Init() {
     return 0;
   }
-  
+
   static uint8_t ReadSectors(uint32_t start, uint8_t num_sectors, uint8_t* data) {
     memset(data, 0, 512);
     return 0;

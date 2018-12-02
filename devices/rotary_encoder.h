@@ -20,7 +20,7 @@
 #ifndef AVRLIBX_DEVICES_ROTARY_ENCODER_H_
 #define AVRLIBX_DEVICES_ROTARY_ENCODER_H_
 
-#include "avrlibx/devices/switch.h"
+#include <avrlibx/devices/switch.h>
 
 namespace avrlibx {
 
@@ -30,7 +30,7 @@ class RotaryEncoder {
   typedef DebouncedSwitch<A> SwitchA;
   typedef DebouncedSwitch<B> SwitchB;
   typedef DebouncedSwitch<Click> SwitchClick;
- 
+
   RotaryEncoder() { }
 
   static void Init() {
@@ -65,11 +65,11 @@ template<typename Encoder>
 class RotaryEncoderTracker {
  public:
   RotaryEncoderTracker() { }
-  
+
   static void Init() {
     Encoder::Init();
   }
-  
+
   static inline void Read() {
     if (!increment_) {
       increment_ = Encoder::Read();
@@ -78,15 +78,15 @@ class RotaryEncoderTracker {
       clicked_ = Encoder::clicked();
     }
   }
-  
+
   static inline uint8_t clicked() { return clicked_; }
   static inline uint8_t increment() { return increment_; }
   static inline uint8_t immediate_value() { return Encoder::immediate_value(); }
   static void Flush() {
     increment_ = 0;
-    clicked_ = 0; 
+    clicked_ = 0;
   }
-  
+
  private:
   static int8_t increment_;
   static uint8_t clicked_;

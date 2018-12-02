@@ -1,4 +1,4 @@
-#!/usr/bin/python2.5
+#!/usr/bin/python2.7
 #
 # Copyright 2011 Olivier Gillet.
 #
@@ -27,7 +27,7 @@ import sys
 
 
 class ResourceEntry(object):
-  
+
   def __init__(self, index, key, value, dupe_of, table):
     self._index = index
     self._key = key
@@ -44,7 +44,7 @@ class ResourceEntry(object):
     c_type = self._table.c_type
     name = self.variable_name
     return 'const %(c_type)s %(name)s[] PROGMEM' % locals()
-    
+
   def Declare(self, f):
     if self._dupe_of == self._key:
       # Dupes are not declared.
@@ -63,12 +63,12 @@ class ResourceEntry(object):
     f.write('#define %(prefix)s_%(key)s %(index)d%(comment)s\n' % locals())
     if not size is None:
       f.write('#define %(prefix)s_%(key)s_SIZE %(size)d\n' % locals())
-  
+
   def Compile(self, f):
     # Do not create declaration for dupes.
     if self._dupe_of != self._key:
       return
-    
+
     declaration = self.declaration
     if self._table.python_type == str:
       value = self._value
@@ -76,16 +76,16 @@ class ResourceEntry(object):
     else:
       f.write('%(declaration)s = {\n' % locals())
       n_elements = len(self._value)
-      for i in xrange(0, n_elements, 8):
+      for i in range(0, n_elements, 8):
         f.write('  ');
         f.write(', '.join(
-            '%6d' % self._value[j] for j in xrange(i, min(n_elements, i + 8))))
+            '%6d' % self._value[j] for j in range(i, min(n_elements, i + 8))))
         f.write(',\n');
       f.write('};\n')
-    
+
 
 class ResourceTable(object):
-  
+
   def __init__(self, resource_tuple):
     self.name = resource_tuple[1]
     self.prefix = resource_tuple[2]
@@ -113,7 +113,7 @@ class ResourceTable(object):
           values.get(hashable_value, None), self))
       if not hashable_value in values:
         values[hashable_value] = key
-  
+
   def _ComputeIdentifierRewriteTable(self):
     in_chr = ''.join(map(chr, range(256)))
     out_chr = [ord('_')] * 256
@@ -130,7 +130,7 @@ class ResourceTable(object):
     table = string.maketrans(in_chr, ''.join(map(chr, out_chr)))
     bad_chars = '\t\n\r-:()[]"\',;'
     self._MakeIdentifier = lambda s:s.translate(table, bad_chars)
-  
+
   def DeclareEntries(self, f):
     if self.python_type != str:
       for entry in self.entries:
@@ -139,12 +139,12 @@ class ResourceTable(object):
   def DeclareAliases(self, f):
     for entry in self.entries:
       entry.DeclareAlias(f)
-  
+
   def Compile(self, f):
     # Write a declaration for each entry.
     for entry in self.entries:
       entry.Compile(f)
-    
+
     # Write the resource pointer table.
     modifier = 'PROGMEM ' if not self.ram_based_table else ''
     c_type = self.c_type
@@ -157,7 +157,7 @@ class ResourceTable(object):
 
 
 class ResourceLibrary(object):
-  
+
   def __init__(self, root):
     self._tables = []
     self._root = root
@@ -187,7 +187,7 @@ class ResourceLibrary(object):
 
   def _DeclareTables(self, f):
     for table in self._tables:
-      f.write('extern const %s* const %s_table[];\n\n' % (table.c_type, table.name)) 
+      f.write('extern const %s* const %s_table[];\n\n' % (table.c_type, table.name))
 
   def _DeclareEntries(self, f):
     for table in self._tables:
@@ -196,11 +196,11 @@ class ResourceLibrary(object):
   def _DeclareAliases(self, f):
     for table in self._tables:
       table.DeclareAliases(f)
-  
+
   def _CompileTables(self, f):
     for table in self._tables:
       table.Compile(f)
-  
+
   def GenerateHeader(self):
     root = self._root
     f = file(os.path.join(root.target, 'resources.h'), 'wb')
@@ -212,7 +212,7 @@ class ResourceLibrary(object):
     f.write('#define %s\n\n' % header_guard)
     f.write(root.includes + '\n\n')
     if root.create_specialized_manager:
-      f.write('#include "avrlibx/resources/resources_manager.h"\n')
+      f.write('#include <avrlibx/resources/resources_manager.h>\n')
     self._OpenNamespace(f)
     f.write('typedef %s ResourceId;\n\n' % \
         root.types[self.max_num_entries > 255])
@@ -228,7 +228,7 @@ class ResourceLibrary(object):
     self._CloseNamespace(f)
     f.write('\n#endif  // %s\n' % (header_guard))
     f.close()
-    
+
   def GenerateCc(self):
     root = self._root
     file_name = os.path.join(self._root.target, 'resources.cc')
@@ -256,7 +256,7 @@ def Compile(path):
 
 
 def main(argv):
-  for i in xrange(1, len(argv)):
+  for i in range(1, len(argv)):
     Compile(argv[i])
 
 

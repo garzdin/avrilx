@@ -24,8 +24,8 @@
 #include <avr/delay.h>
 #include <avr/io.h>
 
-#include "avrlibx/avrlibx.h"
-#include "avrlibx/system/timer.h"
+#include <avrlibx/avrlibx.h>
+#include <avrlibx/system/timer.h>
 
 #define ConstantDelay(x) _delay_ms((x))
 

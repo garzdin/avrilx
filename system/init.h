@@ -22,7 +22,7 @@
 
 #include <avr/interrupt.h>
 
-#include "avrlibx/system/clock.h"
+#include <avrlibx/system/clock.h>
 
 namespace avrlibx {
 

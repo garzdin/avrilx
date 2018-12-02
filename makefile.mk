@@ -13,10 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-include avrlibx/config.mk
+include $(PROJECT_ROOT)/avrlibx/config.mk
 
-BUILD_ROOT     = build/
-BUILD_DIR      = $(BUILD_ROOT)$(TARGET)/
+BUILD_ROOT     = $(APP_ROOT)/build
+BUILD_DIR      = $(BUILD_ROOT)/$(TARGET)/
 
 MCU            = atxmega$(MCU_NAME)
 DMCU           = atxmega$(MCU_NAME)
@@ -48,7 +48,7 @@ AVRDUDE        = $(AVRDUDE_PATH)avrdude
 REMOVE         = rm -f
 CAT            = cat
 
-CPPFLAGS      = -mmcu=$(MCU) -I. \
+CPPFLAGS      = -mmcu=$(MCU) -I$(PROJECT_ROOT) \
 			-g -Os -w -Wall \
 			-D__PROG_TYPES_COMPAT__ \
 			-DF_CPU=$(F_CPU) \
@@ -60,7 +60,7 @@ CPPFLAGS      = -mmcu=$(MCU) -I. \
 			-D$(MCU_DEFINE) \
 			-mcall-prologues
 CXXFLAGS      = -fno-exceptions
-ASFLAGS       = -mmcu=$(MCU) -I. -x assembler-with-cpp
+ASFLAGS       = -mmcu=$(MCU) -I$(PROJECT_ROOT) -x assembler-with-cpp
 LDFLAGS       = -mmcu=$(MCU) -lm -Os -Wl,--gc-sections$(EXTRA_LD_FLAGS)
 
 # ------------------------------------------------------------------------------
@@ -156,31 +156,11 @@ size: $(TARGET_SIZE)
 ramsize: $(TARGET_SIZE)
 		cat $(TARGET_SIZE) | awk '{ print $$2+$$3 }' | tail -n1 | figlet | cowsay -n -f small
 
-size_report:  build/$(TARGET)/$(TARGET).lss build/$(TARGET)/$(TARGET).top_symbols
+size_report:  $(APP_ROOT)/build/$(TARGET)/$(TARGET).lss $(APP_ROOT)/build/$(TARGET)/$(TARGET).top_symbols
 
 .PHONY: all clean depends upload
 
 include $(DEP_FILE)
-
-# ------------------------------------------------------------------------------
-# Midi files for firmware update
-# ------------------------------------------------------------------------------
-
-HEX2SYSEX = python avrlibx/tools/hex2sysex/hex2sysex.py
-
-$(BUILD_DIR)%.syx: $(BUILD_DIR)%.hex
-	$(HEX2SYSEX) $(SYSEX_FLAGS) --syx -o $@ $<
-
-syx: $(BUILD_DIR)$(TARGET).syx
-
-# ------------------------------------------------------------------------------
-# Resources
-# ------------------------------------------------------------------------------
-
-RESOURCE_COMPILER = avrlibx/tools/resources_compiler.py
-
-resources:	$(wildcard $(RESOURCES)/*.py) 
-		python $(RESOURCE_COMPILER) $(RESOURCES)/resources.py
 
 # ------------------------------------------------------------------------------
 # Set fuses

@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-AVRLIBX_TOOLS_PATH = /usr/local/CrossPack-AVR/bin/
-AVRDUDE_PATH       = /usr/local/CrossPack-AVR/bin/
-PROGRAMMER         = avrispmkII
+AVRLIBX_TOOLS_PATH = /usr/local/bin/
+AVRDUDE_PATH       = /usr/local/bin/
+PROGRAMMER         = atmelice_pdi
 PROGRAMMER_PORT    = usb

@@ -20,8 +20,8 @@
 #ifndef AVRLIBX_DEVICES_SHIFT_REGISTER_H_
 #define AVRLIBX_DEVICES_SHIFT_REGISTER_H_
 
-#include "avrlibx/avrlibx.h"
-#include "avrlibx/io/gpio.h"
+#include <avrlibx/avrlibx.h>
+#include <avrlibx/io/gpio.h>
 
 namespace avrlibx {
 

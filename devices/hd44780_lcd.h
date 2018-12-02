@@ -20,10 +20,10 @@
 #ifndef AVRLIBX_DEVICES_HD44780_LCD_H_
 #define AVRLIBX_DEVICES_HD44780_LCD_H_
 
-#include "avrlibx/avrlibx.h"
-#include "avrlibx/io/ring_buffer.h"
-#include "avrlibx/system/time.h"
-#include "avrlibx/resources/resources_manager.h"
+#include <avrlibx/avrlibx.h>
+#include <avrlibx/io/ring_buffer.h>
+#include <avrlibx/system/time.h>
+#include <avrlibx/resources/resources_manager.h>
 
 using avrlibx::SimpleResourcesManager;
 
@@ -126,7 +126,7 @@ class Hd44780Lcd {
       }
     }
   }
-  
+
   static uint8_t WriteData(uint8_t c) {
     if (OutputBuffer::writable() < 2) {
       return 0;
@@ -140,11 +140,11 @@ class Hd44780Lcd {
     }
     OutputBuffer::Overwrite2(LCD_COMMAND | (c >> 4), LCD_COMMAND | (c & 0x0f));
   }
-  
+
   static inline uint8_t Write(uint8_t character) {
     WriteData(character);
   }
-  
+
   static inline uint8_t Write(const char* s) {
     while (*s) {
       WriteData(*s);
@@ -155,7 +155,7 @@ class Hd44780Lcd {
   static inline void MoveCursor(uint8_t row, uint8_t col) {
     WriteCommand(LCD_SET_DDRAM_ADDRESS | col | (row << 6));
   }
- 
+
   static inline void SetCustomCharMap(
       const uint8_t* data,
       uint8_t num_characters,
@@ -175,14 +175,14 @@ class Hd44780Lcd {
       SlowData(SimpleResourcesManager::Lookup<uint8_t, uint8_t>(data, i));
     }
   }
-  
+
   static inline void Flush() {
     while (OutputBuffer::readable() || busy()) {
       Tick();
       ConstantDelay(1);
     }
   }
-  
+
   static inline uint8_t writable() { return OutputBuffer::writable(); }
   static inline uint8_t busy() { return transmitting_; }
   static inline uint8_t blink_counter() { return blink_counter_; }
@@ -207,12 +207,12 @@ class Hd44780Lcd {
     EndWrite();
     ConstantDelay(3);
   }
-  
+
   static void SlowCommand(uint8_t value) {
     SlowWrite(LCD_COMMAND | (value >> 4));
     SlowWrite(LCD_COMMAND | (value & 0x0f));
   }
-  
+
   static void SlowData(uint8_t value) {
     SlowWrite(LCD_DATA | (value >> 4));
     SlowWrite(LCD_DATA | (value & 0x0f));

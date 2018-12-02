@@ -20,10 +20,10 @@
 #ifndef AVRLIBX_UI_EVENT_QUEUE_H_
 #define AVRLIBX_UI_EVENT_QUEUE_H_
 
-#include "avrlibx/avrlibx.h"
-#include "avrlibx/io/ring_buffer.h"
-#include "avrlibx/system/time.h"
-#include "avrlibx/utils/op.h"
+#include <avrlibx/avrlibx.h>
+#include <avrlibx/io/ring_buffer.h>
+#include <avrlibx/system/time.h>
+#include <avrlibx/utils/op.h>
 
 namespace avrlibx {
 
@@ -50,38 +50,38 @@ class EventQueue {
   };
   typedef uint16_t Value;
   typedef EventQueue<size> Me;
-   
+
   EventQueue() { }
-  
+
   static void Flush() {
     events_.Flush();
   };
-  
+
   static void AddEvent(uint8_t control_type, uint8_t id, uint8_t data) {
     Word v;
     v.bytes[0] = U8ShiftLeft4(control_type) | (id & 0x0f);
     v.bytes[1] = data;
     events_.Overwrite(v.value);
   }
-  
+
   static uint8_t available() {
     return events_.readable();
   }
-  
+
   static uint32_t idle_time() {
     uint32_t now = milliseconds();
     return static_cast<uint16_t>(now - last_event_time_) >> 8;
   }
-  
+
   static uint16_t idle_time_ms() {
     uint32_t now = milliseconds();
     return static_cast<uint16_t>(now - last_event_time_);
   }
-  
+
   static void Touch() {
     last_event_time_ = milliseconds();
   }
-  
+
   static Event PullEvent() {
     Event e;
     Word v;
@@ -91,7 +91,7 @@ class EventQueue {
     e.value = v.bytes[1];
     return e;
   }
-  
+
  private:
   static uint32_t last_event_time_;
   static RingBuffer<Me> events_;

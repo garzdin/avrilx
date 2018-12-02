@@ -1,7 +1,7 @@
 // Copyright 2011 Olivier Gillet.
 //
 // Author: Olivier Gillet (ol.gillet@gmail.com)
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -20,11 +20,11 @@
 #ifndef AVRLIBX_FILESYSTEM_FILE_H_
 #define AVRLIBX_FILESYSTEM_FILE_H_
 
-#include <string.h>
+#include <avrlibx/string.h>
 
-#include "avrlibx/avrlibx.h"
+#include <avrlibx/avrlibx.h>
 
-#include "avrlibx/filesystem/filesystem.h"
+#include <avrlibx/filesystem/filesystem.h>
 
 namespace avrlibx {
 
@@ -41,15 +41,15 @@ class File {
  public:
   File();
   ~File();
-  
+
   FilesystemStatus Open(const char* file_name, const char* mode) {
     return Open(file_name, mode, 0);
   }
-  
+
   FilesystemStatus Open(const char* file_name, uint8_t attributes) {
     return Open(file_name, attributes, 0);
   }
-  
+
   FilesystemStatus Open(
       const char* file_name,
       const char* mode,
@@ -57,8 +57,8 @@ class File {
   FilesystemStatus Open(
       const char* file_name,
       uint8_t attributes,
-      uint16_t retry_timeout);  
-  
+      uint16_t retry_timeout);
+
   FilesystemStatus Seek(uint32_t position);
   FilesystemStatus Close();
   FilesystemStatus Truncate();
@@ -68,7 +68,7 @@ class File {
       const uint8_t* data,
       uint16_t size,
       uint16_t* written);
-  
+
   FilesystemStatus Write(
       const char* data,
       uint16_t size,
@@ -85,7 +85,7 @@ class File {
             data)), size, read);
   }
 
-  
+
   uint16_t Read(uint8_t* data, uint16_t size) {
     uint16_t read;
     return Read(data, size, &read) == FS_OK ? read : 0;
@@ -94,16 +94,16 @@ class File {
     uint16_t written;
     return Write(data, size, &written) == FS_OK ? written : 0;
   }
-  
+
   uint8_t eof() const { return f_eof(&f_); }
   uint8_t error() const { return f_error(&f_); }
   uint32_t tell() const { return f_tell(&f_); }
   uint32_t size() const { return f_size(&f_); }
-  
+
  private:
   uint8_t opened_;
   FIL f_;
-  
+
   DISALLOW_COPY_AND_ASSIGN(File);
 };
 

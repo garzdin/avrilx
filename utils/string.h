@@ -20,9 +20,9 @@
 #ifndef AVRLIBX_UTILS_STRING_H_
 #define AVRLIBX_UTILS_STRING_H_
 
-#include <string.h>
+#include <avrlibx/string.h>
 
-#include "avrlibx/avrlibx.h"
+#include <avrlibx/avrlibx.h>
 
 namespace avrlibx {
 

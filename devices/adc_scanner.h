@@ -22,8 +22,8 @@
 #ifndef AVRLIBX_DEVICES_ADC_SCANNER_H_
 #define AVRLIBX_DEVICES_ADC_SCANNER_H_
 
-#include "avrlibx/io/adc.h"
-#include "avrlibx/utils/op.h"
+#include <avrlibx/io/adc.h>
+#include <avrlibx/utils/op.h>
 
 namespace avrlibx {
 
@@ -48,7 +48,7 @@ class ADCScanner {
     ADCChannel::StartConversion(scan_cycle_ + first_input);
     Lock(threshold);
   }
- 
+
   static void Lock(uint16_t locked_threshold) {
     for (uint8_t i = 0; i < num_inputs; ++i) {
       thresholds_[i] = locked_threshold;
@@ -57,7 +57,7 @@ class ADCScanner {
 
   static inline void Read() {
     int16_t value = Clip(ADCChannel::Read(), 0, 32767);
-    int32_t delta = static_cast<int16_t>(value_[scan_cycle_]) - 
+    int32_t delta = static_cast<int16_t>(value_[scan_cycle_]) -
         static_cast<int16_t>(value);
     if (delta < 0) {
       delta = -delta;
@@ -77,7 +77,7 @@ class ADCScanner {
     uint16_t shift = (15 - resolution);
     return value_[index] >> shift;
   }
-  
+
   static inline uint16_t value() {
     return value(index());
   }
@@ -92,7 +92,7 @@ class ADCScanner {
 
  private:
   typedef ADC<Port, channel> ADCChannel;
-  
+
   static uint8_t scan_cycle_;
   static uint16_t value_[num_inputs];
   static uint16_t thresholds_[num_inputs];

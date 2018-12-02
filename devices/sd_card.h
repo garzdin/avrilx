@@ -1,7 +1,7 @@
 // Copyright 2011 Olivier Gillet.
 //
 // Author: Olivier Gillet (ol.gillet@gmail.com)
-// 
+//
 // Inspired by:
 // - The Arduino Sd2Card Library (C) 2009 by William Greiman,
 // - sd_raw.c (C) 2006-2009 by Roland Riegel
@@ -26,8 +26,8 @@
 #ifndef AVRLIBX_DEVICES_SD_CARD_H_
 #define AVRLIBX_DEVICES_SD_CARD_H_
 
-#include "avrlibx/avrlibx.h"
-#include "avrlibx/system/time.h"
+#include <avrlibx/avrlibx.h>
+#include <avrlibx/system/time.h>
 
 namespace avrlibx {
 
@@ -224,28 +224,28 @@ template<typename Spi, typename Config = NoTimerBasedTimeoutConfig>
 class SdCard {
  public:
   SdCard() { }
-  
+
   static SdStatus Init() {
     Spi::Init();
     type_ = 0;
-    
+
     Spi::End();
     // Look at me, I'm a clock!
     for (uint8_t i = 0; i < 10; ++i) {
       Spi::Send(0xff);
     }
-    
+
     {
       // Make sure that the CS pin is set to high whenever we leave this block.
       scoped_resource<Spi> spi_session;
-    
+
       // Ask card to go to idle mode.
       if (!WaitForStatus<Config::init_timeout>(
           SD_CMD_GO_IDLE_STATE,
           SD_STATE_IDLE)) {
         return SD_ERROR_INIT;
       }
-    
+
       // Try a V2 command to determine the card version.
       // The command checks for the 2.7-3.6V voltage range.
       if (Command(SD_CMD_SEND_IF_COND, 0x1aa) & SD_STATE_ILLEGAL_COMMAND) {
@@ -263,7 +263,7 @@ class SdCard {
         }
         type_ = SD_SD2;
       }
-    
+
       // Initialize card. Note that MMC cards do not accept this command.
       // We do not support MMC cards.
       if (!WaitForAStatus<Config::init_timeout>(
@@ -272,7 +272,7 @@ class SdCard {
           SD_STATE_READY)) {
         return SD_ERROR_INIT;
       }
-    
+
       // Check for SDHC.
       if (type_ == SD_SD2) {
         if (Command(SD_CMD_READ_OCR, 0)) {
@@ -313,7 +313,7 @@ class SdCard {
       }
     }
   }
-  
+
   static SdStatus ReadSectors(
       uint32_t start,
       uint8_t num_sectors,
@@ -342,7 +342,7 @@ class SdCard {
       return SD_OK;
     }
   }
-  
+
   static inline uint8_t type() { return type_; }
   static inline uint16_t sector_size() { return 512; }
 
@@ -362,7 +362,7 @@ class SdCard {
     }
     return ReadData((uint8_t*)(cid), 16);
   }
-  
+
   static SdStatus ReadData(uint8_t* data, uint16_t size) {
     if (WaitForData<Config::read_timeout>() != SD_STATE_START_DATA_BLOCK) {
       return SD_ERROR_READ_TIMEOUT;
@@ -374,7 +374,7 @@ class SdCard {
     Swallow(2);  // CRC
     return SD_OK;
   }
-  
+
   /*static uint8_t WriteData(uint8_t token, const uint8_t* data) {
     if (!WaitNotBusy<Config::busy_timeout>()) {
       return SD_ERROR_WRITE_TIMEOUT;
@@ -429,12 +429,12 @@ class SdCard {
     }
     return status;
   }
-  
+
   static uint8_t ACommand(uint8_t command, uint32_t argument) {
     Command(SD_CMD_APP_CMD, 0);
     return Command(command, argument);
   }
-  
+
   template<uint16_t timeout>
   static uint8_t WaitForStatus(uint8_t command, uint8_t status) {
     if (timeout == 0) {
@@ -455,7 +455,7 @@ class SdCard {
       return 0;
     }
   }
-  
+
   template<uint16_t timeout>
   static uint8_t WaitForAStatus(uint8_t command, uint32_t arg, uint8_t status) {
     if (timeout == 0) {
@@ -476,7 +476,7 @@ class SdCard {
       return 0;
     }
   }
-  
+
   template<uint16_t timeout>
   static uint8_t WaitForData() {
     uint8_t status;
@@ -500,7 +500,7 @@ class SdCard {
       return status;
     }
   }
-  
+
   template<uint16_t timeout>
   static uint8_t WaitNotBusy() {
     if (timeout == 0) {
@@ -521,9 +521,9 @@ class SdCard {
       return 0;
     }
   }
-  
+
   static uint8_t type_;
-   
+
   DISALLOW_COPY_AND_ASSIGN(SdCard);
 };
 

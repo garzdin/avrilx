@@ -18,7 +18,7 @@
 
 #include <avr/io.h>
 
-#include "avrlibx/avrlibx.h"
+#include <avrlibx/avrlibx.h>
 
 namespace avrlibx {
 
@@ -100,7 +100,7 @@ struct Gpio {
       }
     }
   }
-  
+
   static inline void set_mode(PortMode mode) {
     if (mode == PORT_MODE_TOTEM_POLE) {
       Pin<Port, bit>::set_control(PORT_OPC_TOTEM_gc);
@@ -112,7 +112,7 @@ struct Gpio {
       Pin<Port, bit>::set_control(PORT_OPC_PULLDOWN_gc);
     }
   }
-  
+
   static inline void set_sense(SenseMode mode) {
     if (mode == SENSE_MODE_BOTH_EDGES) {
       Pin<Port, bit>::set_control(PORT_ISC_BOTHEDGES_gc);
@@ -124,11 +124,11 @@ struct Gpio {
       Pin<Port, bit>::set_control(PORT_ISC_LEVEL_gc);
     }
   }
-  
+
   static inline uint8_t event() {
     return Port::event_base() + bit;
   }
-  
+
   static inline void High() {
     Port::out_set(_BV(bit));
   }
@@ -138,7 +138,7 @@ struct Gpio {
   static inline void Toggle() {
     Port::out_tgl(_BV(bit));
   }
-  
+
   static inline void set_value(uint8_t value) {
     if (value) {
       Port::out_set(_BV(bit));
@@ -146,11 +146,11 @@ struct Gpio {
       Port::out_clr(_BV(bit));
     }
   }
-  
-  static inline uint8_t value() { 
-    return Port::in() & _BV(bit) ? HIGH : LOW; 
+
+  static inline uint8_t value() {
+    return Port::in() & _BV(bit) ? HIGH : LOW;
   }
-  
+
   static inline void Write(uint8_t value) { set_value(value); }
   static inline uint8_t Read() { return value(); }
 };
@@ -158,11 +158,11 @@ struct Gpio {
 struct DummyGpio {
   static inline void set_direction(PortDirection direction) { }
   static inline void set_mode(PortDirection direction) { }
-  
+
   static inline void High() { }
   static inline void Low() { }
   static inline void Toggle() { }
-  
+
   static inline void set_value(uint8_t value) { }
   static inline uint8_t value() { return 0; }
   static inline void Write(uint8_t value) { set_value(value); }
@@ -177,11 +177,11 @@ struct Inverter {
   static inline void set_mode(PortDirection direction) {
     Gpio::set_mode(direction);
   }
-  
+
   static inline void High() { Gpio::Low(); }
   static inline void Low() { Gpio::High(); }
   static inline void Toggle() { Gpio::Toggle(); }
-  
+
   static inline void set_value(uint8_t value) { Gpio::set_value(!value); }
   static inline uint8_t value() { return !Gpio::value(); }
   static inline void Write(uint8_t value) { set_value(value); }

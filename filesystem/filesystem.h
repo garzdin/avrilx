@@ -1,7 +1,7 @@
 // Copyright 2011 Olivier Gillet.
 //
 // Author: Olivier Gillet (ol.gillet@gmail.com)
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -20,12 +20,12 @@
 #ifndef AVRLIBX_FILESYSTEM_FILE_SYSTEM_H_
 #define AVRLIBX_FILESYSTEM_FILE_SYSTEM_H_
 
-#include <string.h>
+#include <avrlibx/string.h>
 
-#include "avrlibx/avrlibx.h"
+#include <avrlibx/avrlibx.h>
 
-#include "avrlibx/third_party/ff/ff.h"
-#include "avrlibx/third_party/ff/mmc.h"
+#include <avrlibx/third_party/ff/ff.h>
+#include <avrlibx/third_party/ff/mmc.h>
 
 namespace avrlibx {
 
@@ -70,11 +70,11 @@ struct FileInfo {
   inline uint32_t size() const {
     return file_info.fsize;
   }
-  
+
   inline uint16_t modification_date() const {
     return file_info.fdate;
   }
-  
+
   inline uint16_t modification_time() const {
     return file_info.ftime;
   }
@@ -82,7 +82,7 @@ struct FileInfo {
   inline uint8_t attributes() const {
     return file_info.fattrib;
   }
-  
+
   inline uint8_t is_read_only() const {
     return file_info.fattrib & FS_ATTRIBUTE_READ_ONLY;
   }
@@ -106,21 +106,21 @@ struct FileInfo {
   inline uint8_t is_archive() const {
     return file_info.fattrib & FS_ATTRIBUTE_ARCHIVE;
   }
-  
+
   inline const char* name() const {
     return file_info.fname;
   }
-  
+
   FILINFO file_info;
 };
 
 class Filesystem {
  public:
   Filesystem() { }
-  
+
   static FilesystemStatus Init();
   static FilesystemStatus Init(uint16_t timeout_ms);
-  
+
   static FilesystemStatus Unlink(const char* file_name);
   static FilesystemStatus Mkdir(const char* dir_name);
   static FilesystemStatus Mkdirs(char* path);
@@ -134,25 +134,25 @@ class Filesystem {
       const char* file_name,
       uint16_t date,
       uint16_t time);
-  
+
   static FilesystemStatus Mkfs();
-  
+
   static uint32_t GetFreeSpace();
   static uint16_t GetType() {
     uint8_t card_type;
     disk_ioctl(0, MMC_GET_TYPE, &card_type);
     return fs_.fs_type | (card_type << 8);
   }
-  
+
   static inline void Tick() {
     disk_timerproc();
   }
-  
+
   static uint8_t* buffer() { return fs_.win; }
-  
+
  private:
   static FATFS fs_;
-  
+
   DISALLOW_COPY_AND_ASSIGN(Filesystem);
 };
 

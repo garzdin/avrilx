@@ -21,7 +21,7 @@
 #include <avr/interrupt.h>
 #include <avr/io.h>
 
-#include "avrlibx/system/time.h"
+#include <avrlibx/system/time.h>
 
 namespace avrlibx {
 

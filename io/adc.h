@@ -18,8 +18,8 @@
 
 #include <avr/io.h>
 
-#include "avrlibx/avrlibx.h"
-#include "avrlibx/io/gpio.h"
+#include <avrlibx/avrlibx.h>
+#include <avrlibx/io/gpio.h>
 
 namespace avrlibx {
 

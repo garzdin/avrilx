@@ -25,7 +25,7 @@
 
 #include <avr/pgmspace.h>
 
-#include "avrlibx/avrlibx.h"
+#include <avrlibx/avrlibx.h>
 
 namespace avrlibx {
 
@@ -249,7 +249,7 @@ static inline uint8_t U8U4MixU8(uint8_t a, uint8_t b, uint8_t balance) {
     "adc %B3, r1"     "\n\t"  // add to sum H
     "eor r1, r1"      "\n\t"  // reset r1 after multiplication
     "andi %B3, 15"    "\n\t"  // keep 4 lowest bits of H
-    "andi %A3, 240"   "\n\t"  // keep 4 highest bits of L 
+    "andi %A3, 240"   "\n\t"  // keep 4 highest bits of L
     "or %B3, %A3"     "\n\t"  // copy 4 high bits of L to H -> LLLLHHHH
     "swap %B3"        "\n\t"  // swap to get HHHHLLLL
     "mov %0, %B3"     "\n\t"  // move to output

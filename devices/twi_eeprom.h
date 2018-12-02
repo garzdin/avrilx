@@ -19,14 +19,14 @@
 //
 // Supports an "auto-banking" mode in which the address space is split into
 // multiple chips. For example, if four 16k chips (AT24C128) are connected on
-// the bus, R/W to addresses 0x0000 - 0x4000 will be addressed to chip 1, 
+// the bus, R/W to addresses 0x0000 - 0x4000 will be addressed to chip 1,
 // R/W to addresses 0x4000 - 0x8000 will be addressed to chip 2, etc.
 
 #ifndef AVRLIBX_DEVICES_TWI_EEPROM_H_
 #define AVRLIBX_DEVICES_TWI_EEPROM_H_
 
-#include "avrlibx/io/twi.h"
-#include "avrlibx/system/time.h"
+#include <avrlibx/io/twi.h>
+#include <avrlibx/system/time.h>
 
 namespace avrlibx {
 
@@ -42,7 +42,7 @@ class TwiEeprom {
   static void Init() {
     Bus::Init();
   }
-  
+
   static void Done() {
     Bus::Done();
   }
@@ -83,14 +83,14 @@ class TwiEeprom {
     header[1] = address & 0xff;
     if (Write(header, 2, NULL, 0) == 2) {
       // Invalidate pending read operations.
-      Bus::FlushInputBuffer(); 
+      Bus::FlushInputBuffer();
       return 1;
     } else {
       Bus::FlushOutputBuffer();
       return 0;
     }
   }
-  
+
   static inline uint16_t Write(
       uint16_t address,
       const uint8_t* data,
@@ -155,14 +155,14 @@ class TwiEeprom {
       return Read(size, data);
     }
   }
-  
+
   static inline uint8_t Write(uint16_t address, uint8_t byte) {
     uint8_t data = byte;
     return Write(&data, 1);
   }
- 
+
  private:
-  static uint8_t Write(const uint8_t* header, uint8_t header_size, 
+  static uint8_t Write(const uint8_t* header, uint8_t header_size,
                        const uint8_t* payload, uint8_t payload_size) {
     uint8_t size = header_size + payload_size;
     if (size >= Bus::Output::capacity()) {

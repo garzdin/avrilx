@@ -22,7 +22,7 @@
 
 #include <avr/io.h>
 
-#include "avrlibx/io/gpio.h"
+#include <avrlibx/io/gpio.h>
 
 namespace avrlibx {
 

@@ -19,7 +19,7 @@
 // The pin1 of the N * 8 - 1 LEDs are connected to the first shift register
 // outputs. The pin2 of all LEDs are connected to the last output of the last
 // shift register in the cascade.
-// 
+//
 //  +--------+
 //  | 595    |
 //  |     Q0 |-----[220R]----->|---+
@@ -48,10 +48,10 @@
 #ifndef AVRLIBX_DEVICES_BICOLOR_LED_ARRAY_H_
 #define AVRLIBX_DEVICES_BICOLOR_LED_ARRAY_H_
 
-#include <string.h>
+#include <avrlibx/string.h>
 
-#include "avrlibx/devices/shift_register.h"
-#include "avrlibx/utils/op.h"
+#include <avrlibx/devices/shift_register.h>
+#include <avrlibx/utils/op.h>
 
 namespace avrlibx {
 
@@ -61,14 +61,14 @@ class LedArray {
   enum {
     size = num_regs * 8 - 1
   };
-   
+
   LedArray() { }
-  
+
   static inline void Init() {
     Register::Init();
     Clear();
   }
-  
+
   // Intensity is in AAAABBBB format, where AAAA is the intensity for the
   // color 1, and BBBB is the intensity for the color 2.
   static inline void set_pixel(uint8_t index, uint8_t intensity) {
@@ -78,7 +78,7 @@ class LedArray {
   static inline void set_direct_pixel(uint8_t index, uint8_t intensity) {
     pixels_[index] = intensity;
   }
-  
+
   static inline uint8_t pixel(uint8_t index) {
     return buffered_pixels_[index];
   }
@@ -86,28 +86,28 @@ class LedArray {
   static inline void ShiftOutData(uint8_t v) {
     Register::ShiftOut(v);
   }
-  
+
   static inline void Begin() {
     Register::Begin();
   }
-  
+
   static inline void End() {
     Register::End();
   }
-  
+
   static inline void Clear() {
     memset(buffered_pixels_, 0, size);
   }
-  
+
   static inline void Sync() {
     memcpy(pixels_, buffered_pixels_, size);
   }
-  
+
   static inline void ShiftOutPixels() {
     uint8_t byte = refresh_cycle_ & 1;
     uint8_t num_bits = 1;
     uint8_t threshold = refresh_cycle_ >> 1;
-    
+
     for (uint8_t i = (num_regs * 8) - 2; i != 0xff ; --i) {
       byte <<= 1;
       uint8_t intensity;
@@ -128,15 +128,15 @@ class LedArray {
     }
     refresh_cycle_ = (refresh_cycle_ + 1) & 0x1f;
   }
-  
+
   static inline void Write() {
     Begin();
     ShiftOutPixels();
     End();
   }
-  
+
   uint8_t* pixels() { return buffered_pixels_; }
-  
+
  private:
   typedef ShiftRegisterOutput<Latch, Clock, Data, 8, MSB_FIRST> Register;
 
